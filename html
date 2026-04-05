@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon + Render 웹서비스</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold text-blue-600 mb-6 text-center">사용자 등록</h1>
+        
+        <form id="userForm" class="space-y-4 mb-8">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">이름</label>
+                <input type="text" id="name" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">이메일</label>
+                <input type="email" id="email" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">등록하기</button>
+        </form>
+
+        <hr class="mb-8">
+
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">등록된 사용자 목록</h2>
+        <ul id="userList" class="divide-y divide-gray-200">
+            </ul>
+    </div>
+
+    <script>
+        // 유저 목록 가져오기 함수
+        async function fetchUsers() {
+            const res = await fetch('/users');
+            const users = await res.json();
+            const list = document.getElementById('userList');
+            list.innerHTML = users.map(user => `
+                <li class="py-3">
+                    <p class="font-medium text-gray-900">${user.name}</p>
+                    <p class="text-sm text-gray-500">${user.email}</p>
+                </li>
+            `).join('');
+        }
+
+        // 폼 제출 이벤트
+        document.getElementById('userForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            await fetch('/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email })
+            });
+
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            fetchUsers(); // 목록 새로고침
+        });
+
+        // 초기 로드 시 실행
+        fetchUsers();
+    </script>
+</body>
+</html>
