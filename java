@@ -1,9 +1,37 @@
-// index.js (기존 코드 상단 부분에 추가)
 const express = require('express');
-const path = require('path'); // 추가
-// ... 기존 코드 ...
+const { Pool } = require('pg');
+require('dotenv').config();
 
+const app = express();
 app.use(express.json());
-app.use(express.static('public')); // 추가: public 폴더를 메인으로 사용
+app.use(express.static('public'));
 
-// ... 나머지 API 코드 (app.post, app.get 등) ...
+// Neon DB 연결 설정
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+// 1. 방명록 목록 가져오기
+app.get('/api/guests', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM guests ORDER BY created_at DESC');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// 2. 방명록 쓰기
+app.post('/api/guests', async (req, res) => {
+  const { name } = req.body;
+  try {
+    await pool.query('INSERT INTO guests (name) VALUES ($1)', [name]);
+    res.status(201).send('저장 성공!');
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`서버 작동 중: port ${PORT}`));
