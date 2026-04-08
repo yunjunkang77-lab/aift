@@ -1,6 +1,0 @@
-my-web-service/
-├── index.js
-├── public/
-│   └── index.html  <-- 새로 만들 파일
-├── prisma/
-└── package.json
