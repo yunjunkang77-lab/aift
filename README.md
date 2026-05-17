@@ -1,52 +1,40 @@
-# 수험생 대나무숲 (Exam Community)
+# 수험생 커뮤니티 프로젝트 🎓
 
-익명 수험생들을 위한 정보 공유 및 소통 커뮤니티입니다.
+이 프로젝트는 Node.js(Express)와 Neon(PostgreSQL)을 사용한 간단한 커뮤니티 첫 페이지입니다.
 
-## 🚀 시작하기
+## 🚀 시작하기 전 준비사항
 
-### 1. 데이터베이스 설정 (Neon)
-1. [Neon.tech](https://neon.tech)에 가입하고 새 프로젝트를 생성합니다.
-2. 생성된 PostgreSQL 연결 문자열(Connection String)을 복사합니다.
-3. 프로젝트 루트 폴더에 `.env` 파일을 만들고 아래 내용을 입력합니다:
-   ```env
-   DATABASE_URL="복사한_연결_문자열"
-   ```
+1. **Node.js 설치**: [nodejs.org](https://nodejs.org/)에서 설치하세요.
+2. **Neon 계정 생성**: [neon.tech](https://neon.tech/)에서 데이터베이스를 만들고 `DATABASE_URL`을 복사하세요.
+3. **VS Code 설치**: 코드를 수정하기 위해 설치하는 것을 추천합니다.
 
-### 2. 로컬 실행
-```bash
-npm install
-npx prisma generate
-npx prisma db push
-npm run dev
-```
-이제 `http://localhost:3000`에서 확인하실 수 있습니다.
+## 🛠️ 로컬에서 실행하기
 
-## 🌐 배포하기
-
-### 1. GitHub 업로드
-1. GitHub에서 새로운 레포지토리를 생성합니다.
-2. 아래 명령어를 터미널(폴더 안)에 입력합니다:
+1. 바탕화면의 `examinee-community` 폴더에서 터미널(또는 CMD)을 엽니다.
+2. 라이브러리를 설치합니다:
    ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin https://github.com/사용자이름/레포지토리이름.git
-   git push -u origin main
+   npm install
    ```
+3. `.env` 파일을 열고 `DATABASE_URL`에 Neon에서 복사한 주소를 넣습니다.
+4. 데이터베이스 구조를 동기화합니다:
+   ```bash
+   npx prisma db push
+   ```
+5. 서버를 실행합니다:
+   ```bash
+   npm start
+   ```
+6. 웹 브라우저에서 `http://localhost:3000` 접속!
 
-### 2. Render 배포
-1. [Render.com](https://render.com)에 로그인합니다.
-2. **New +** -> **Web Service**를 선택합니다.
-3. 생성한 GitHub 레포지토리를 연결합니다.
-4. 설정값:
-   - **Build Command**: `npm install && npx prisma generate && npx prisma db push && npm run build`
-   - **Start Command**: `npm run start`
-5. **Environment Variables**에 `DATABASE_URL`을 추가하고 Neon의 연결 문자열을 넣습니다.
-6. 배포가 완료될 때까지 기다립니다.
+## 🌐 배포하기 (Render)
 
-## 🛠 기능
-- **글 게시**: 회원가입 없이 익명으로 글 작성
-- **조회수**: 게시글 열람 시 자동 증가
-- **댓글**: 게시글에 익명 댓글 작성
-- **공유**: 게시글 URL 복사 기능
+1. 이 폴더를 본인의 **GitHub** 저장소(Repository)에 올립니다.
+2. **Render.com**에 로그인하고 `New > Web Service`를 선택합니다.
+3. GitHub 저장소를 연결합니다.
+4. `Environment Variables` 설정에서 `DATABASE_URL`을 추가합니다.
+5. `Deploy` 버튼을 누르면 끝!
+
+## ✨ 주요 기능
+- **로그인/회원가입**: bcrypt를 사용한 안전한 비밀번호 저장
+- **조회수**: 페이지 접속 시 자동 증가
+- **좋아요**: 하트 버튼 클릭 시 실시간 반영
